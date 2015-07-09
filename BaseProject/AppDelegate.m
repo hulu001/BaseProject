@@ -7,8 +7,11 @@
 //
 
 #import "AppDelegate.h"
+#import "ZWIntroductionViewController.h"
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) ZWIntroductionViewController *introductionView;
 
 @end
 
@@ -16,7 +19,38 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    //添加window和controller
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.homeController = [[YWHomeViewController alloc] init];
+    self.window.rootViewController = [[YWNavigationController alloc] initWithRootViewController:self.homeController];
+    [self.window makeKeyAndVisible];
+    
+    
+    
+    // Added Introduction View Controller
+    NSArray *coverImageNames = @[@"img_index_01txt", @"img_index_02txt", @"img_index_03txt"];
+    NSArray *backgroundImageNames = @[@"img_index_01bg", @"img_index_02bg", @"img_index_03bg"];
+    self.introductionView = [[ZWIntroductionViewController alloc] initWithCoverImageNames:coverImageNames backgroundImageNames:backgroundImageNames];
+    
+    // Example 2
+    //    UIButton *enterButton = [UIButton new];
+    //    [enterButton setBackgroundImage:[UIImage imageNamed:@"bg_bar"] forState:UIControlStateNormal];
+    //    self.introductionView = [[ZWIntroductionViewController alloc] initWithCoverImageNames:coverImageNames backgroundImageNames:backgroundImageNames button:enterButton];
+    
+    [self.window addSubview:self.introductionView.view];
+    
+    __weak AppDelegate *weakSelf = self;
+    self.introductionView.didSelectedEnter = ^() {
+        [weakSelf.introductionView.view removeFromSuperview];
+        weakSelf.introductionView = nil;
+        
+        // enter main view , write your code ...
+        //        ViewController *mainVC = [[ViewController alloc] init];
+        //        weakSelf.window.rootViewController = mainVC;
+        
+    };
+    
     return YES;
 }
 
